@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Antique Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBF0B9" />
+      <stop offset="25%" stop-color="#D4AF37" />
+      <stop offset="50%" stop-color="#AA7C11" />
+      <stop offset="75%" stop-color="#F3E5AB" />
+      <stop offset="100%" stop-color="#8C6508" />
+    </linearGradient>
+
+    <!-- Metallic Silver Gradient -->
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#D1D5DB" />
+      <stop offset="70%" stop-color="#9CA3AF" />
+      <stop offset="100%" stop-color="#E5E7EB" />
+    </linearGradient>
+
+    <!-- Dark Luxury Background Radial Gradient -->
+    <radialGradient id="darkBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1A1815" />
+      <stop offset="70%" stop-color="#0E0D0B" />
+      <stop offset="100%" stop-color="#050505" />
+    </radialGradient>
+
+    <!-- Subtle Glow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Circular Shield Base -->
+  <circle cx="250" cy="250" r="236" fill="url(#darkBg)" stroke="url(#goldGrad)" stroke-width="8" />
+  <circle cx="250" cy="250" r="222" fill="none" stroke="url(#silverGrad)" stroke-width="2" stroke-dasharray="4 4" opacity="0.75" />
+  <circle cx="250" cy="250" r="214" fill="none" stroke="url(#goldGrad)" stroke-width="3" />
+
+  <!-- Crown / Royal Crest At Top -->
+  <g transform="translate(250, 115) scale(0.95)" filter="url(#goldGlow)">
+    <!-- Central Crown -->
+    <path d="M-55,20 L-65,-25 L-25,-5 L0,-40 L25,-5 L65,-25 L55,20 Z" fill="url(#goldGrad)" stroke="#5A3E05" stroke-width="1.5" />
+    <!-- Crown Jewels / Dots -->
+    <circle cx="-65" cy="-28" r="4.5" fill="url(#silverGrad)" />
+    <circle cx="-25" cy="-7" r="3.5" fill="url(#silverGrad)" />
+    <circle cx="0" cy="-44" r="6" fill="url(#silverGrad)" stroke="#B38612" stroke-width="1" />
+    <circle cx="25" cy="-7" r="3.5" fill="url(#silverGrad)" />
+    <circle cx="65" cy="-28" r="4.5" fill="url(#silverGrad)" />
+    <!-- Crown Base Band -->
+    <rect x="-56" y="20" width="112" height="10" rx="3" fill="url(#silverGrad)" stroke="#A0780D" stroke-width="1" />
+  </g>
+
+  <!-- Laurel Wreath Leaves (Left & Right) -->
+  <g fill="url(#goldGrad)" opacity="0.9">
+    <!-- Left Branch Leaves -->
+    <path d="M120,210 Q95,225 105,250 Q125,235 120,210 Z" />
+    <path d="M110,245 Q85,265 98,290 Q118,272 110,245 Z" />
+    <path d="M105,285 Q82,310 100,335 Q117,315 105,285 Z" />
+    <path d="M115,330 Q98,358 122,380 Q135,355 115,330 Z" />
+    <path d="M135,370 Q122,400 150,418 Q160,392 135,370 Z" />
+
+    <!-- Right Branch Leaves -->
+    <path d="M380,210 Q405,225 395,250 Q375,235 380,210 Z" />
+    <path d="M390,245 Q415,265 402,290 Q382,272 390,245 Z" />
+    <path d="M395,285 Q418,310 400,335 Q383,315 395,285 Z" />
+    <path d="M385,330 Q402,358 378,380 Q365,355 385,330 Z" />
+    <path d="M365,370 Q378,400 350,418 Q340,392 365,370 Z" />
+  </g>
+
+  <!-- Big Bold KGF Monogram (Cinematic, Sharp, Serif Cut) -->
+  <g text-anchor="middle" font-family="'Cinzel', 'Playfair Display', 'Times New Roman', Georgia, serif">
+    <!-- KGF Main Letters with Drop Shadow -->
+    <text x="252" y="274" font-size="112" font-weight="900" letter-spacing="8" fill="#000000" opacity="0.75">KGF</text>
+    <text x="250" y="270" font-size="112" font-weight="900" letter-spacing="8" fill="url(#goldGrad)" stroke="#664606" stroke-width="2" filter="url(#goldGlow)">KGF</text>
+
+    <!-- Metallic Silver Accent Line Beneath KGF -->
+    <line x1="140" y1="292" x2="360" y2="292" stroke="url(#silverGrad)" stroke-width="2.5" />
+    <!-- Diamond in Center of Line -->
+    <polygon points="250,285 256,292 250,299 244,292" fill="url(#goldGrad)" stroke="#FFFFFF" stroke-width="0.8" />
+
+    <!-- MENS FASHION CLUB Sub-Text -->
+    <text x="250" y="328" font-size="25" font-weight="800" letter-spacing="7" fill="url(#silverGrad)">MENS FASHION</text>
+    <text x="250" y="362" font-size="21" font-weight="700" letter-spacing="12" fill="url(#goldGrad)">CLUB</text>
+    
+    <!-- Akola City Crest Tag -->
+    <text x="250" y="405" font-size="13" font-weight="600" letter-spacing="6" fill="#A3A3A3" opacity="0.9">AKOLA</text>
+  </g>
+
+  <!-- Star accents -->
+  <polygon points="190,398 193,404 200,405 195,410 196,416 190,412 184,416 185,410 180,405 187,404" fill="url(#goldGrad)" />
+  <polygon points="310,398 313,404 320,405 315,410 316,416 310,412 304,416 305,410 300,405 307,404" fill="url(#goldGrad)" />
+</svg>

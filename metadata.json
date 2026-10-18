@@ -1,0 +1,8 @@
+{
+  "name": "KGF Mens Fashion Club",
+  "description": "Premium Men's Wear, Wedding Sherwanis, Blazers, Suits, Shirts & Accessories in Akola, Maharashtra.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
