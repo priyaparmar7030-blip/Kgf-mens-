@@ -11,7 +11,8 @@ import {
   Info,
   AlertCircle,
   ShieldCheck,
-  ChevronDown
+  ChevronDown,
+  Play
 } from 'lucide-react';
 import {
   STORE_CONFIG,
@@ -31,7 +32,11 @@ export default function App() {
   const [reviewDraft, setReviewDraft] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
 
-  // Subtle scroll parallax
+  // Cinematic Intro State
+  const [introActive, setIntroActive] = useState<boolean>(true);
+  const [introFading, setIntroFading] = useState<boolean>(false);
+
+  // Scroll parallax tracking
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -39,12 +44,39 @@ export default function App() {
     setInstagramUrl(verifiedInsta);
     setReviewDraft(generateReviewDraft(5, [], ''));
 
+    // Check prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setIntroActive(false);
+    } else {
+      // Auto-transition intro after 3.2 seconds
+      const fadeTimer = setTimeout(() => {
+        setIntroFading(true);
+      }, 2600);
+
+      const endTimer = setTimeout(() => {
+        setIntroActive(false);
+      }, 3400);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(endTimer);
+      };
+    }
+
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const dismissIntro = () => {
+    setIntroFading(true);
+    setTimeout(() => {
+      setIntroActive(false);
+    }, 400);
+  };
 
   const handleRatingChange = (newRating: number) => {
     setRating(newRating);
@@ -79,7 +111,67 @@ export default function App() {
     <div className="relative min-h-screen text-[#1A1A1A] font-sans-body antialiased overflow-x-hidden selection:bg-[#C6A15B]/35 selection:text-[#790018]">
       
       {/* ------------------------------------------------------------- */}
-      {/* 1. DEDICATED CONTINUOUS BACKGROUND LAYER (EXACT AS WORKING)   */}
+      {/* 0. DRAMATIC CINEMATIC INTRO OVERLAY (OPTIONAL SHORT REVEAL)  */}
+      {/* ------------------------------------------------------------- */}
+      {introActive && (
+        <div 
+          className={`cinematic-intro-curtain ${introFading ? 'intro-hidden' : ''}`}
+          role="dialog"
+          aria-label="Cinematic Opening Reveal"
+        >
+          {/* Subtle light sweep across the intro screen */}
+          <div className="intro-shine-sweep" />
+
+          {/* Drifting Gold Dust in Intro */}
+          <div className="gold-dust-particle w-2 h-2 left-[20%]" style={{ animationDuration: '4s', animationDelay: '0s' }} />
+          <div className="gold-dust-particle w-3 h-3 right-[25%]" style={{ animationDuration: '5s', animationDelay: '0.8s' }} />
+          <div className="gold-dust-particle w-1.5 h-1.5 left-[48%]" style={{ animationDuration: '3.5s', animationDelay: '1.2s' }} />
+
+          {/* Intro Crest & Masthead */}
+          <div className="relative z-10 text-center px-4 max-w-lg mx-auto flex flex-col items-center">
+            
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-[#C6A15B]/70 p-1.5 shadow-2xl shadow-[#C6A15B]/30 bg-[#14100E] flex items-center justify-center mb-5 animate-logo-haute">
+              <img
+                src="/kgf-logo.svg"
+                alt="KGF Emblem"
+                className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(198,161,91,0.5)]"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/kgf-logo.png';
+                }}
+              />
+            </div>
+
+            <span className="font-mono-tag text-[10px] tracking-[0.3em] uppercase text-[#C6A15B] mb-2 font-semibold">
+              Haute Couture Menswear
+            </span>
+
+            <h1 className="font-cinzel text-2xl sm:text-4xl font-extrabold text-[#FFF9EF] tracking-wider drop-shadow-md">
+              KGF MENS FASHION CLUB
+            </h1>
+
+            <div className="mt-3 flex items-center gap-3">
+              <span className="h-[1px] w-8 bg-[#C6A15B]/50" />
+              <p className="font-cormorant text-sm sm:text-base tracking-[0.25em] text-[#C6A15B] uppercase font-semibold">
+                YOUR EXPERIENCE MATTERS
+              </p>
+              <span className="h-[1px] w-8 bg-[#C6A15B]/50" />
+            </div>
+
+            {/* Skip Intro Button */}
+            <button
+              onClick={dismissIntro}
+              type="button"
+              className="mt-8 px-5 py-2 rounded-full border border-[#C6A15B]/60 text-[#FFF9EF] bg-[#C6A15B]/15 hover:bg-[#C6A15B]/30 text-xs font-mono-tag tracking-widest uppercase transition-all flex items-center gap-2 backdrop-blur-sm active:scale-95 cursor-pointer"
+            >
+              <span>Enter Experience</span>
+              <ChevronDown className="w-3.5 h-3.5 text-[#C6A15B]" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 1. CONTINUOUS CINEMATIC BACKGROUND LAYER (EXACT AS WORKING)   */}
       {/* ------------------------------------------------------------- */}
       <div 
         className="cinematic-bg-container"
@@ -98,7 +190,7 @@ export default function App() {
           }}
         />
 
-        {/* Layer B: Hero Portrait Image */}
+        {/* Layer B: Hero Portrait Image (Man in red blazer, sunglasses, cigarette & polka dot shirt) */}
         <img
           src="/assets/kgf-background.jpg"
           alt="KGF Royal Red Blazer Portrait"
@@ -113,6 +205,17 @@ export default function App() {
 
         {/* Layer C: Subtle Warm-Ivory Translucent Overlay */}
         <div className="cinematic-overlay" />
+
+        {/* Layer D: Volumetric Light Ray Sweep */}
+        <div className="light-ray-sweep" />
+
+        {/* Layer E: Drifting Gold Dust Particles */}
+        <div className="gold-dust-particle w-1.5 h-1.5 left-[12%]" style={{ animationDuration: '14s', animationDelay: '0s' }} />
+        <div className="gold-dust-particle w-2.5 h-2.5 right-[18%]" style={{ animationDuration: '18s', animationDelay: '3s' }} />
+        <div className="gold-dust-particle w-1 h-1 left-[32%]" style={{ animationDuration: '11s', animationDelay: '6s' }} />
+        <div className="gold-dust-particle w-2 h-2 right-[35%]" style={{ animationDuration: '16s', animationDelay: '1.5s' }} />
+        <div className="gold-dust-particle w-1.5 h-1.5 left-[82%]" style={{ animationDuration: '13s', animationDelay: '8s' }} />
+        <div className="gold-dust-particle w-2 h-2 left-[62%]" style={{ animationDuration: '20s', animationDelay: '4.5s' }} />
       </div>
 
       {/* ------------------------------------------------------------- */}
@@ -127,7 +230,7 @@ export default function App() {
         <main className="max-w-3xl mx-auto w-full px-4 sm:px-6 py-8 sm:py-16 flex-1">
           
           {/* Cinematic Editorial Header */}
-          <header className="text-center pb-10 border-b border-[#C6A15B]/30 animate-masthead-reveal">
+          <header className="text-center pb-10 border-b border-[#C6A15B]/35 animate-masthead-reveal">
             
             {/* Top Micro-Pill Bar for Social Channels */}
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-7">
@@ -153,13 +256,13 @@ export default function App() {
               </a>
             </div>
 
-            {/* KGF Crest Logo Emblem with Gentle Reveal */}
+            {/* KGF Crest Logo Emblem with Subtle Light Sweep */}
             <div className="flex justify-center mb-6">
-              <div className="animate-logo-haute w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C6A15B] p-1.5 shadow-2xl shadow-[#C6A15B]/25 bg-[#FFF9EF]/95 backdrop-blur-md flex items-center justify-center transform transition-transform duration-500 hover:scale-105 hover:border-[#FFF9EF]">
+              <div className="animate-logo-haute w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#C6A15B] p-1.5 shadow-2xl shadow-[#C6A15B]/30 bg-[#FFF9EF]/95 backdrop-blur-md flex items-center justify-center transform transition-transform duration-500 hover:scale-105 hover:border-[#FFF9EF]">
                 <img
                   src="/kgf-logo.svg"
                   alt="KGF Mens Fashion Club Logo"
-                  className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(198,161,91,0.4)]"
+                  className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(198,161,91,0.45)]"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/kgf-logo.png';
                   }}
@@ -168,28 +271,28 @@ export default function App() {
             </div>
 
             {/* Eyebrow Label */}
-            <div className="mb-2.5">
+            <div className="mb-2">
               <span className="font-mono-tag text-[10px] tracking-[0.28em] uppercase text-[#9C7837] font-semibold">
-                Haute Couture & Bespoke Menswear • Akola
+                Bespoke Menswear & Royal Wedding Couture • Akola
               </span>
             </div>
 
-            {/* Luxury Fashion Masthead */}
+            {/* Metallic Gold Embossed Brand Masthead */}
             <h1 className="masthead-kgf">
               KGF MENS FASHION CLUB
             </h1>
 
-            {/* Subheading in Cormorant Garamond with Regal Ornamental Lines */}
+            {/* Subheading in Cormorant Garamond with Antique Gold Accents */}
             <div className="mt-3.5 inline-flex items-center justify-center gap-3 sm:gap-5">
               <span className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-[#C6A15B]" />
-              <h2 className="subheading-editorial font-cormorant text-gold-gradient-haute">
+              <h2 className="subheading-editorial font-cormorant text-metallic-gold">
                 {STORE_CONFIG.headerSubtitle}
               </h2>
               <span className="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-[#C6A15B]" />
             </div>
 
             {/* Store Address Tag */}
-            <p className="mt-4 text-xs sm:text-sm text-neutral-800 max-w-lg mx-auto flex items-center justify-center gap-1.5 font-medium bg-[#FFF9EF]/70 backdrop-blur-xs py-1.5 px-4 rounded-full border border-[#C6A15B]/25 shadow-xs">
+            <p className="mt-4 text-xs sm:text-sm text-neutral-800 max-w-lg mx-auto flex items-center justify-center gap-1.5 font-medium bg-[#FFF9EF]/75 backdrop-blur-xs py-1.5 px-4 rounded-full border border-[#C6A15B]/30 shadow-xs">
               <MapPin className="w-4 h-4 text-[#790018] shrink-0" />
               <span className="font-mono-tag text-[11px] tracking-wide text-neutral-800">{STORE_CONFIG.address}</span>
             </p>
@@ -201,7 +304,7 @@ export default function App() {
           </header>
 
           {/* ------------------------------------------------------------- */}
-          {/* THREE MAIN ACTIONS ONLY (BESPOKE LUXURY GLASS PANELS)         */}
+          {/* THREE MAIN ACTIONS ONLY (ANTIQUE GOLD GLASS PANELS)          */}
           {/* ------------------------------------------------------------- */}
           <div className="mt-9 space-y-7">
             
@@ -209,7 +312,7 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               
               {/* ACTION 1: Follow on Instagram */}
-              <div className="panel-luxury-glass p-6 sm:p-7 flex flex-col justify-between">
+              <div className="panel-antique-glass p-6 sm:p-7 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 text-[#790018]">
@@ -236,7 +339,7 @@ export default function App() {
                     href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-insta-haute w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                    className="btn-insta-antique w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                   >
                     <Instagram className="w-4 h-4" />
                     <span>Follow @kgf_nx</span>
@@ -246,7 +349,7 @@ export default function App() {
               </div>
 
               {/* ACTION 2: Chat on WhatsApp */}
-              <div className="panel-luxury-glass p-6 sm:p-7 flex flex-col justify-between">
+              <div className="panel-antique-glass p-6 sm:p-7 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-[#790018] mb-3">
                     <MessageCircle className="w-5 h-5 text-[#790018]" />
@@ -272,7 +375,7 @@ export default function App() {
                     href={STORE_CONFIG.whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-whatsapp-haute w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                    className="btn-whatsapp-antique w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4 fill-current text-white" />
                     <span>Chat on WhatsApp</span>
@@ -284,7 +387,7 @@ export default function App() {
             </div>
 
             {/* ACTION 3: Google Review Assistant */}
-            <section className="panel-luxury-glass p-6 sm:p-9">
+            <section className="panel-antique-glass p-6 sm:p-9">
               
               {/* Card Header with Badges */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-[#C6A15B]/35 gap-3">
@@ -322,13 +425,13 @@ export default function App() {
                         onClick={() => handleRatingChange(starValue)}
                         onMouseEnter={() => setHoverRating(starValue)}
                         onMouseLeave={() => setHoverRating(0)}
-                        className="p-1 sm:p-2 transition-all transform hover:scale-120 focus:outline-none"
+                        className="p-1 sm:p-2 transition-all transform hover:scale-125 focus:outline-none cursor-pointer"
                         aria-label={`${starValue} Stars`}
                       >
                         <Star
                           className={`w-9 h-9 sm:w-12 sm:h-12 transition-all duration-300 ${
                             isFilled
-                              ? 'text-[#C6A15B] fill-[#C6A15B] drop-shadow-[0_4px_8px_rgba(198,161,91,0.55)]'
+                              ? 'text-[#C6A15B] fill-[#C6A15B] drop-shadow-[0_4px_10px_rgba(198,161,91,0.65)]'
                               : 'text-neutral-300 hover:text-[#C6A15B]/50'
                           }`}
                         />
@@ -369,10 +472,10 @@ export default function App() {
                         key={item}
                         type="button"
                         onClick={() => toggleHighlight(item)}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-[#790018] text-[#FFF9EF] font-semibold shadow-xs border border-[#790018]'
-                            : 'bg-[#FFF9EF]/80 text-neutral-800 hover:bg-[#C6A15B]/20 hover:text-[#790018] border border-neutral-300'
+                            : 'bg-[#FFF9EF]/85 text-neutral-800 hover:bg-[#C6A15B]/20 hover:text-[#790018] border border-neutral-300'
                         }`}
                       >
                         {isSelected ? '✓ ' : '+ '}
@@ -422,7 +525,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={handleCopyDraft}
-                    className="btn-review-copy-haute w-full sm:w-auto flex-1 py-3.5 px-5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                    className="btn-review-copy-antique w-full sm:w-auto flex-1 py-3.5 px-5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {copied ? (
                       <>
@@ -442,7 +545,7 @@ export default function App() {
                     href={STORE_CONFIG.googleReviewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-review-submit-haute w-full sm:w-auto flex-1 py-3.5 px-5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                    className="btn-review-submit-antique w-full sm:w-auto flex-1 py-3.5 px-5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                   >
                     <span>2. Continue to Google Reviews</span>
                     <ExternalLink className="w-4 h-4 text-white" />
@@ -493,7 +596,7 @@ export default function App() {
         </main>
 
         {/* Ultra-Luxury Translucent Editorial Footer */}
-        <footer className="panel-luxury-glass !rounded-none !border-x-0 !border-b-0 border-t border-[#C6A15B]/35 py-7 text-center text-xs text-neutral-700 mt-12">
+        <footer className="panel-antique-glass !rounded-none !border-x-0 !border-b-0 border-t border-[#C6A15B]/35 py-7 text-center text-xs text-neutral-700 mt-12">
           <div className="max-w-3xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3.5">
             <div className="flex items-center gap-2">
               <span className="font-editorial font-bold text-[#790018] tracking-wider text-sm">{STORE_CONFIG.name}</span>
@@ -538,6 +641,18 @@ export default function App() {
               >
                 Directions
               </a>
+              <span>•</span>
+              <button
+                onClick={() => {
+                  setIntroActive(true);
+                  setIntroFading(false);
+                }}
+                className="text-[#9C7837] hover:text-[#790018] flex items-center gap-1 underline cursor-pointer"
+                title="Replay Cinematic Intro"
+              >
+                <Play className="w-3 h-3" />
+                <span>Replay Intro</span>
+              </button>
             </div>
           </div>
         </footer>
